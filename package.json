@@ -1,0 +1,14 @@
+{
+  "name": "markbook-be",
+  "version": "0.0.1",
+  "description": "markbook backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "angus & mike alex",
+  "private": true,
+  "dependencies": {
+    "koa": "^2.5.2"
+  }
+}
