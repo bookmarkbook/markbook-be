@@ -4,11 +4,15 @@
   "description": "markbook backend",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "dev": "node src/index.js"
   },
   "author": "angus & mike alex",
   "private": true,
   "dependencies": {
-    "koa": "^2.5.2"
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-mongo": "^1.3.0",
+    "koa-router": "^7.4.0"
   }
 }
