@@ -75,5 +75,5 @@ typings/
 # yarn
 yarn.lock
 
-#db
-/db.conf.js
+# db
+src/db.conf.js
