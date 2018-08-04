@@ -1,6 +1,7 @@
 const User = require('../model/user')
 const Crypt = require('../common/crypt')
 const JWT = require('../common/jwt')
+const {token_alive} = require('../common/const')
 
 class Auth {
 
@@ -11,7 +12,7 @@ class Auth {
         const info = await User.get(ctx, username)
         if (info.length === 1) {
             const u = info[0]
-            const a = {'usage': 'general', 'timeout': Date.now() + 4 * 60 * 60 * 1000}
+            const a = {usage: 'general', expiration: Date.now() + token_alive}
             if (u.pwd === pwd) {
                 ctx.body = {code: 200, content: JWT.gen(a)}
             } else {
@@ -19,6 +20,17 @@ class Auth {
             }
         } else {
             ctx.body = {code: 404, msg: 'user not found'}   
+        }
+    }
+
+    static async refreshToken(ctx) {
+        const data = ctx.request.body
+        const payload = JWT.validate(data.token)
+        if (payload && payload.expiration) {
+            payload.expiration = Date.now + token_alive
+            ctx.body = {code: 200, msg: JWT.gen(payload)}
+        } else {
+            ctx.body = {code: 401, msg: 'token not valid'}
         }
     }
 
