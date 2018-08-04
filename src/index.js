@@ -3,7 +3,7 @@ const mongo = require('koa-mongo')
 const parser = require('koa-bodyparser')
 const app = new Koa()
 
-app.use(mongo(require('./db.conf')))
+app.use(mongo(require('./conf').db))
 
 app.use(parser())
 
