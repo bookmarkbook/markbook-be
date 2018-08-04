@@ -26,11 +26,16 @@ class Auth {
     static async refreshToken(ctx) {
         const data = ctx.request.body
         const payload = JWT.validate(data.token)
-        if (payload && payload.expiration) {
-            payload.expiration = Date.now + token_alive
-            ctx.body = {code: 200, msg: JWT.gen(payload)}
+        if (payload) {
+            const now = Date.now()
+            if (payload.expiration > now) {
+                payload.expiration = now + token_alive
+                ctx.body = {code: 200, msg: JWT.gen(payload)}
+            } else {
+                ctx.body = {code: 400, msg: 'token expired'}
+            }
         } else {
-            ctx.body = {code: 401, msg: 'token not valid'}
+            ctx.body = {code: 401, msg: 'token invalid'}
         }
     }
 
