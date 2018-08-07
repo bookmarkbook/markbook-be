@@ -23,6 +23,19 @@ class Auth {
         }
     }
 
+    static async register(ctx) {
+        const data = ctx.request.body
+        const un = data.un
+        const pwd = Crypt.md5(data.pwd)
+        const info = await User.get(ctx, un)
+        if (info.length > 0) {
+            ctx.body = {code: 400, msg: 'user exist'}
+        } else {
+            await User.add(ctx, un, pwd)
+            ctx.body = {code: 200, msg: 'register success'}
+        }
+    }
+
     static async refreshToken(ctx) {
         const data = ctx.request.body
         const payload = JWT.validate(data.token)
