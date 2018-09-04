@@ -7,13 +7,13 @@ class Auth {
 
     static async login(ctx) {
         const data = ctx.request.body
-        const username = data.username
+        const username = data.un
         const pwd = Crypt.md5(data.pwd)
         const info = await User.get(ctx, username)
         if (info.length === 1) {
             const u = info[0]
-            const a = {usage: 'general', expiration: Date.now() + token_alive}
             if (u.pwd === pwd) {
+                const a = {un: u.un, usage: 'general', expiration: Date.now() + token_alive}
                 ctx.body = {code: 200, content: JWT.gen(a)}
             } else {
                 ctx.body = {code: 403, msg: 'password error'}
@@ -32,7 +32,8 @@ class Auth {
             ctx.body = {code: 400, msg: 'user exist'}
         } else {
             await User.add(ctx, un, pwd)
-            ctx.body = {code: 200, msg: 'register success'}
+            const a = {un: u.un, usage: 'general', expiration: Date.now() + token_alive}
+            ctx.body = {code: 200, data: JWT.gen(a), msg: 'register success'}
         }
     }
 
@@ -43,7 +44,7 @@ class Auth {
             const now = Date.now()
             if (payload.expiration > now) {
                 payload.expiration = now + token_alive
-                ctx.body = {code: 200, msg: JWT.gen(payload)}
+                ctx.body = {code: 200, data: JWT.gen(payload)}
             } else {
                 ctx.body = {code: 400, msg: 'token expired'}
             }
